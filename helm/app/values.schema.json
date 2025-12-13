@@ -1,0 +1,224 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "app": {
+      "type": "object",
+      "required": ["namespace", "configMap", "service", "deployment"],
+      "properties": {
+        "namespace": {
+          "type": "object",
+          "required": ["enabled", "name"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "name": { "type": "string", "minLength": 1 },
+            "labels": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            }
+          }
+        },
+
+        "configMap": {
+          "type": "object",
+          "required": ["enabled", "name"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "name": { "type": "string" },
+            "annotations": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            }
+          }
+        },
+
+        "service": {
+          "type": "object",
+          "required": ["name", "type", "port", "targetPort"],
+          "properties": {
+            "name": { "type": "string" },
+            "type": {
+              "type": "string",
+              "enum": ["ClusterIP", "NodePort", "LoadBalancer"]
+            },
+            "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+            "targetPort": { "type": "integer", "minimum": 1, "maximum": 65535 },
+            "selector": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            }
+          }
+        },
+
+        "secret": {
+          "type": "object",
+          "required": ["enabled", "name"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "name": { "type": "string" },
+            "annotations": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            },
+            "labels": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            }
+          }
+        },
+
+        "deployment": {
+          "type": "object",
+          "required": ["name", "replicas", "container"],
+          "properties": {
+            "name": { "type": "string" },
+            "replicas": { "type": "integer", "minimum": 1 },
+            "minReadySeconds": { "type": "integer", "minimum": 0 },
+            "revisionHistoryLimit": { "type": "integer", "minimum": 0 },
+            "progressDeadlineSeconds": { "type": "integer", "minimum": 1 },
+            "labels": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            },
+            "enableStrategy": { "type": "boolean" },
+            "enablePodSecurityContext": { "type": "boolean" },
+            "serviceAccount": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean" }
+              }
+            },
+            "initContainers": {
+              "type": "array",
+              "items": { "type": "object" }
+            },
+            "podAnnotations": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            },
+            "nodeSelector": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            },
+
+            "container": {
+              "type": "object",
+              "required": ["name", "image"],
+              "properties": {
+                "name": { "type": "string" },
+                "image": { "type": "string" },
+                "imagePullPolicy": {
+                  "type": "string",
+                  "enum": ["Always", "IfNotPresent", "Never"]
+                },
+                "ports": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["containerPort"],
+                    "properties": {
+                      "containerPort": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 65535
+                      }
+                    }
+                  }
+                },
+                "envFrom": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "oneOf": [
+                      {
+                        "properties": {
+                          "configMapRef": {
+                            "type": "object",
+                            "required": ["name"],
+                            "properties": {
+                              "name": { "type": "string" }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "properties": {
+                          "secretRef": {
+                            "type": "object",
+                            "required": ["name"],
+                            "properties": {
+                              "name": { "type": "string" }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                "resources": {
+                  "type": "object",
+                  "properties": {
+                    "limits": {
+                      "type": "object",
+                      "properties": {
+                        "cpu": { "type": "string" },
+                        "memory": { "type": "string" }
+                      }
+                    },
+                    "requests": {
+                      "type": "object",
+                      "properties": {
+                        "cpu": { "type": "string" },
+                        "memory": { "type": "string" }
+                      }
+                    }
+                  }
+                },
+                "enableStaticEnv": { "type": "boolean" },
+                "enableVolumesMounts": { "type": "boolean" },
+                "enableContainerSecurityContext": { "type": "boolean" },
+                "env": {
+                  "type": "array",
+                  "items": { "type": "object" }
+                },
+                "volumeMounts": {
+                  "type": "array",
+                  "items": { "type": "object" }
+                }
+              }
+            }
+          }
+        },
+
+        "secretStore": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+
+        "serviceAccount": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+
+        "ingress": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        }
+      }
+    }
+  }
+}
