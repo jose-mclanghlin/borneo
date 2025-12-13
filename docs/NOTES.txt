@@ -28,7 +28,7 @@ Steps:
 8- kubectl get pods -n bilbao  # Verify pod status
 
 # Release Management
-9- helm list -n bilbao  # List releases in namespace
+9-  helm list -n bilbao  # List releases in namespace
 10- helm status bilbao -n bilbao  # Release status
 11- helm history bilbao -n bilbao  # Revision history
 12- helm uninstall bilbao -n bilbao  # Completely uninstall
@@ -43,7 +43,7 @@ Good Practices:
 2- https://medium.com/@muppedaanvesh/a-hands-on-guide-to-aws-eks-iam-roles-for-service-accounts-irsa-%EF%B8%8F-558c7a3e7c69
 3- https://medium.com/@andriikrymus/external-secrets-operator-with-aws-ssm-parameter-store-712572229f74
 
-Implementations:
+Implementations AWS POLICIES:
 1- Confirm that your cluster has OIDC enabled
         : eksctl utils associate-iam-oidc-provider --region us-east-2 --cluster example-cluster --approve
 2- Create a policy with permissions to read secrets 
@@ -83,4 +83,4 @@ EKS:
         $value = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($_.Value))
         Write-Host "${name}: $value"
     }
-}     
+}
