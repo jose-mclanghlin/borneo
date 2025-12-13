@@ -1,5 +1,6 @@
 apiVersion: v2
-name: maranello
+name: itaugua
+description: A Helm chart for Kubernetes
 version: 0.0.1
 appVersion: "0.0.1"
 dependencies:

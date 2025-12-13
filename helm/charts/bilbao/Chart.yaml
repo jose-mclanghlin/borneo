@@ -1,9 +1,0 @@
-apiVersion: v2
-name: bilbao
-version: 0.0.2
-description: A Helm chart for Kubernetes
-appVersion: "0.0.2"
-dependencies:
-  - name: app
-    version: 0.0.1
-    repository: "file://../../app"
