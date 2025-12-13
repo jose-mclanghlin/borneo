@@ -1,13 +1,13 @@
 FROM node:20.18.0-alpine3.20
 
-RUN addgroup -S plub && adduser -S plub -G plub
-USER plub
+RUN addgroup -S company && adduser -S company -G company
+USER company
 
-RUN mkdir "/home/plub/.npm-packages" && \
-    npm config set prefix "/home/plub/.npm-packages"
+RUN mkdir "/home/company/.npm-packages" && \
+    npm config set prefix "/home/company/.npm-packages"
 
-ENV NPM_PACKAGES="/home/plub/.npm-packages"
-ENV NODE_PATH="/home/plub/.npm-packages/lib/node_modules"
+ENV NPM_PACKAGES="/home/company/.npm-packages"
+ENV NODE_PATH="/home/company/.npm-packages/lib/node_modules"
 ENV PATH="$PATH:$NPM_PACKAGES/bin"
 
 RUN npm install -g @opentelemetry/api@1.9.0  && \
