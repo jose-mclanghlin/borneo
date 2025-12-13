@@ -1,47 +1,47 @@
 app:
   namespace:
     enabled: true
-    name: "maranello"
+    name: "itaugua"
     labels:
       owner: "devops"
       team: "plataform-devops"
 
   configMap:
     enabled: true
-    name: "maranello-config-map"
+    name: "itaugua-config-map"
     annotations:
-      description: "Configuration for the Maranello service"
+      description: "Configuration for the Itaugua service"
     data:
       NGINX_PORT: "8080"
       APP_ENV: "dev"
 
   service:
-    name: "maranello-service"
+    name: "itaugua-service"
     type: ClusterIP
     port: 8080
     targetPort: 8080
     selector:
-      app: "maranello"
+      app: "itaugua"
   
   secret:
     enabled: true
-    name: "maranello-secrets"
+    name: "itaugua-secrets"
     annotations: 
-      description: "Secrets for the NGINX service"    
+      description: "Secrets for the Itaugua service"    
     labels:
-      name: "maranello-secrets"
+      name: "itaugua-secrets"
     data:
        API_KEY: "ak_7FJ9dP2mQ4Xb81tRv6Kc3wLhZ0SgNEB"
        DB_PASSWORD: "jkl.123456*"
        
   deployment:
-    name: "maranello-deployment"
+    name: "itaugua-deployment"
     replicas: 1
     minReadySeconds: 0
     revisionHistoryLimit: 3
     progressDeadlineSeconds: 600
     labels:
-      app: "maranello"
+      app: "itaugua"
     enableStrategy: false
     enablePodSecurityContext: false
     serviceAccount: {enabled: false}
@@ -56,9 +56,9 @@ app:
         - containerPort: 8080
       envFrom:
         - configMapRef:
-            name: "maranello-config-map"
+            name: "itaugua-config-map"
         - secretRef:
-            name: "maranello-secrets"
+            name: "itaugua-secrets"
       resources:
         limits:
           cpu: "500m"
