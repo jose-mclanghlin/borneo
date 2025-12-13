@@ -2,8 +2,8 @@ namespace:
   enabled: true
   name: "example-app"
   labels:
-    owner: "platform-team"
-    team: "engineering"
+    owner: "devops"
+    team: "plataform-devops"
   istioInjection: false
   goldilocksEnabled: false
 
@@ -13,7 +13,7 @@ configMap:
   annotations:
     description: "Configuration for the Example App service"
   data:
-    APP_ENV: "development"
+    APP_ENV: "dev"
     APP_DEBUG: "true"
     LOG_LEVEL: "debug"
 
@@ -63,8 +63,7 @@ deployment:
     fsGroup: 2000
     seccompProfile:
       type: RuntimeDefault
-  serviceAccount:
-    name: "secrets-reader"
+  serviceAccount: {}
   initContainers: 
     - name: init-myservice
       image: busybox:1.36
@@ -110,30 +109,27 @@ deployment:
       requests:
         cpu: "100m"
         memory: "128Mi"
-    livenessProbe:
-      httpGet:
-        path: /
-        port: 80
-      initialDelaySeconds: 5
-      periodSeconds: 10
-    readinessProbe:
-      httpGet:
-        path: /
-        port: 80
-      initialDelaySeconds: 5
-      periodSeconds: 10
-    startupProbe:
-      #    The startupProbe is used to check if the application
-      #    has successfully started before running livenessProbe/readinessProbe.
-      #    It is ideal when the app takes a long time to initialize 
-      #    (e.g., migrations, warmup).
-      httpGet:
-        path: /startup
-        port: 80
-      initialDelaySeconds: 0
-      periodSeconds: 10
-      timeoutSeconds: 2
-      failureThreshold: 30
+    # Optional health checks - uncomment and configure if needed
+    # livenessProbe:
+    #   httpGet:
+    #     path: /
+    #     port: 80
+    #   initialDelaySeconds: 5
+    #   periodSeconds: 10
+    # readinessProbe:
+    #   httpGet:
+    #     path: /
+    #     port: 80
+    #   initialDelaySeconds: 5
+    #   periodSeconds: 10
+    # startupProbe:
+    #   httpGet:
+    #     path: /startup
+    #     port: 80
+    #   initialDelaySeconds: 0
+    #   periodSeconds: 10
+    #   timeoutSeconds: 2
+    #   failureThreshold: 30
     enableContainerSecurityContext: true
     securityContext:
       allowPrivilegeEscalation: false
@@ -287,7 +283,7 @@ registry:
   pwd: your_registry_password
 
 ingress:
-  enabled: true
+  enabled: false
   name: "example-app-ingress"
   className: "nginx"
   enableTLS: false
@@ -329,3 +325,21 @@ podDisruptionBudget:
   minAvailable: 1
   maxUnavailable: null
   selector: {}
+
+serviceAccount:
+  enabled: false
+  name: "secrets-reader"
+  annotations:
+    eks.amazonaws.com/role-arn: "arn:aws:iam::533267213398:role/eks-irsa-secrets-reader"
+
+secretStore:
+  enabled: false
+  name: "aws-secrets"
+  provider:
+    type: "aws"
+    aws:
+      service: "SecretsManager"
+      region: "us-east-2"
+      role: "arn:aws:iam::533267213398:role/eks-irsa-secrets-reader"
+  serviceAccount:
+    name: "secrets-reader"

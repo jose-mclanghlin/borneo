@@ -1,0 +1,82 @@
+app:
+  namespace:
+    enabled: true
+    name: "maranello"
+    labels:
+      owner: "devops"
+      team: "plataform-devops"
+
+  configMap:
+    enabled: true
+    name: "maranello-config-map"
+    annotations:
+      description: "Configuration for the Maranello service"
+    data:
+      NGINX_PORT: "8080"
+      APP_ENV: "dev"
+
+  service:
+    name: "maranello-service"
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+    selector:
+      app: "maranello"
+  
+  secret:
+    enabled: true
+    name: "maranello-secrets"
+    annotations: 
+      description: "Secrets for the NGINX service"    
+    labels:
+      name: "maranello-secrets"
+    data:
+       API_KEY: "ak_7FJ9dP2mQ4Xb81tRv6Kc3wLhZ0SgNEB"
+       DB_PASSWORD: "jkl.123456*"
+       
+  deployment:
+    name: "maranello-deployment"
+    replicas: 1
+    minReadySeconds: 0
+    revisionHistoryLimit: 3
+    progressDeadlineSeconds: 600
+    labels:
+      app: "maranello"
+    enableStrategy: false
+    enablePodSecurityContext: false
+    serviceAccount: {enabled: false}
+    initContainers: []
+    podAnnotations: {}
+    nodeSelector: {}
+    container:
+      name: "nginx-container"
+      image: nginx:1.27-alpine
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 8080
+      envFrom:
+        - configMapRef:
+            name: "maranello-config-map"
+        - secretRef:
+            name: "maranello-secrets"
+      resources:
+        limits:
+          cpu: "500m"
+          memory: "512Mi"
+        requests:
+          cpu: "200m"
+          memory: "256Mi"
+      enableStaticEnv: false
+      enableVolumesMounts: false
+      enableContainerSecurityContext: false
+      env: []
+      volumeMounts: []
+  
+  secretStore:
+    enabled: false
+
+  serviceAccount:
+    enabled: false
+  
+  ingress:
+    enabled: false

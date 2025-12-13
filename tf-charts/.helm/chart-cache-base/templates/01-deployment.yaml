@@ -1,1 +1,0 @@
-# same procedure for statefulsets

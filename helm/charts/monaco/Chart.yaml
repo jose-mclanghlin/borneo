@@ -1,0 +1,8 @@
+apiVersion: v2
+name: monaco
+version: 0.0.1
+appVersion: "0.0.1"
+dependencies:
+  - name: app
+    version: 0.0.1
+    repository: "file://../../app"

@@ -13,12 +13,30 @@ Documentation:
 // See more: https://dev.to/aws-builders/fetch-aws-secrets-in-your-kubernetes-realm-np3
 
 Steps:
-1- helm dependency update
-2- helm show values charts/chart-deploy-base-0.0.1.tgz
-3- tar -tzf charts/chart-deploy-base-0.0.1.tgz
-4- helm template my-new-app-00 . -f dev.yaml --debug
-5- helm upgrade --install my-new-app-00 . -n my-new-app-00 -f dev.yaml --create-namespace
-6- helm uninstall my-new-app-00 -n my-new-app-00
+# Chart Preparation
+1- helm dependency update  # Update chart dependencies
+2- helm show values charts/app-0.0.1.tgz  # Show default values from base chart
+
+# Testing and Validation
+3- helm template RELEASE-NAME . -f dev.yaml --debug  # Validate configuration without deployment
+4- helm template bilbao-nginx . -f dev.yaml --debug  # Example with descriptive name
+5- tar -tzf charts/app-0.0.1.tgz  # Inspect packaged chart content
+
+# Deployment
+6- helm upgrade --install bilbao . -n bilbao -f dev.yaml --create-namespace  # Install/upgrade
+7- kubectl get all -n bilbao  # Verify deployed resources
+8- kubectl get pods -n bilbao  # Verify pod status
+
+# Release Management
+9- helm list -n bilbao  # List releases in namespace
+10- helm status bilbao -n bilbao  # Release status
+11- helm history bilbao -n bilbao  # Revision history
+12- helm uninstall bilbao -n bilbao  # Completely uninstall
+
+# Troubleshooting
+13- kubectl describe pod <POD-NAME> -n bilbao  # Debug pods
+14- kubectl logs <POD-NAME> -n bilbao  # Application logs
+15- helm rollback bilbao <REVISION> -n bilbao  # Rollback to previous version
 
 Good Practices:
 1- Service Account with IAM Roles for Service Accounts (IRSA) instead of SecretStore to access AWS Secrets Manager

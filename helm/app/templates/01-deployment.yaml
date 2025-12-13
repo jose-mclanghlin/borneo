@@ -54,7 +54,9 @@ spec:
       volumes:
         {{- toYaml .Values.deployment.container.volumes | nindent 8 }}
       {{- end }}
-      {{- if .Values.deployment.serviceAccount.name }}
+      {{- if and .Values.serviceAccount.enabled .Values.serviceAccount.name }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      {{- else if and .Values.deployment.serviceAccount .Values.deployment.serviceAccount.name }}
       serviceAccountName: {{ .Values.deployment.serviceAccount.name }}
       {{- end }}
       {{- if .Values.deployment.initContainers }}

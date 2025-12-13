@@ -1,5 +1,6 @@
 apiVersion: v2
-name: chart-deploy-base
+name: app
 description: "A reusable Helm chart library template for building modular and scalable Kubernetes deployments."
+type: application
 version: 0.0.1
 appVersion: 0.0.1
