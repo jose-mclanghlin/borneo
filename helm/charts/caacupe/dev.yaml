@@ -32,7 +32,7 @@ app:
       name: "caacupe-secrets"
     data:
        API_KEY: "ak_7FJ9dP2mQ4Xb81tRv6Kc3wLhZ0SgNEB"
-       DB_PASSWORD: "jkl.123456*"
+       DB_PASSWORD: "ak_7FJ9dP2mQ4Xb81tRv6Kc3wLhZ0SgNEB"
        
   deployment:
     name: "caacupe-deployment"
