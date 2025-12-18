@@ -71,7 +71,9 @@ deployment:
   container:
     name: "app-container"
     image: "your-registry/your-app"
+    enableCommand: false
     command: ["/bin/sh", "-c", "echo Hello, Kubernetes! && sleep 3600"]
+    enableArguments: false
     arguments: [
       "echo 'Init app'; ./start-app.sh"
     ]

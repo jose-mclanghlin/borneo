@@ -67,11 +67,11 @@ spec:
         - name: {{ .Values.deployment.container.name }}
           image: "{{ .Values.deployment.container.image }}"
           imagePullPolicy: {{ .Values.deployment.container.imagePullPolicy | default "IfNotPresent" }}
-          {{- if .Values.deployment.container.command }}
+          {{- if and .Values.deployment.container.enableCommand .Values.deployment.container.command }}
           command:
             {{- toYaml .Values.deployment.container.command | nindent 12 }}
           {{- end }}
-          {{- if .Values.deployment.container.arguments }}
+          {{- if and .Values.deployment.container.enableArguments .Values.deployment.container.arguments }}
           args:
             {{- toYaml .Values.deployment.container.arguments | nindent 12 }}
           {{- end }}
