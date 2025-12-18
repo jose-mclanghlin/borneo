@@ -52,6 +52,8 @@ app:
       name: "nginx-container"
       image: nginx:1.27-alpine
       imagePullPolicy: IfNotPresent
+      comand: []
+      args: []
       ports:
         - containerPort: 8080
       envFrom:
