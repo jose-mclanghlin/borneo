@@ -1,0 +1,82 @@
+app:
+  namespace:
+    enabled: true
+    name: "caacupe"
+    labels:
+      owner: "devops"
+      team: "plataform-devops"
+
+  configMap:
+    enabled: true
+    name: "caacupe-config-map"
+    annotations:
+      description: "Configuration for the Caacupe service"
+    data:
+      NGINX_PORT: "8080"
+      APP_ENV: "qa"
+
+  service:
+    name: "caacupe-service"
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+    selector:
+      app: "caacupe"
+  
+  secret:
+    enabled: true
+    name: "caacupe-secrets"
+    annotations: 
+      description: "Secrets for the Caacupe service"    
+    labels:
+      name: "caacupe-secrets"
+    data:
+       API_KEY: "ak_7FJ9dP2mQ4Xb81tRv6Kc3wLhZ0SgNEB"
+       DB_PASSWORD: "ak_7FJ9dP2mQ4Xb81tRv6Kc3wLhZ0SgNEB"
+       
+  deployment:
+    name: "caacupe-deployment"
+    replicas: 3
+    minReadySeconds: 0
+    revisionHistoryLimit: 3
+    progressDeadlineSeconds: 600
+    labels:
+      app: "caacupe"
+    enableStrategy: false
+    enablePodSecurityContext: false
+    serviceAccount: {enabled: false}
+    initContainers: []
+    podAnnotations: {}
+    nodeSelector: {}
+    container:
+      name: "nginx-container"
+      image: nginx:1.27-alpine
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 8080
+      envFrom:
+        - configMapRef:
+            name: "caacupe-config-map"
+        - secretRef:
+            name: "caacupe-secrets"
+      resources:
+        limits:
+          cpu: "500m"
+          memory: "512Mi"
+        requests:
+          cpu: "200m"
+          memory: "256Mi"
+      enableStaticEnv: false
+      enableVolumesMounts: false
+      enableContainerSecurityContext: false
+      env: []
+      volumeMounts: []
+  
+  secretStore:
+    enabled: false
+
+  serviceAccount:
+    enabled: false
+  
+  ingress:
+    enabled: false
